@@ -1,0 +1,16 @@
+https://stackoverflow.com/questions/67501093/passthrough-is-not-supported-gl-is-disabled
+
+
+npm i robotjs
+npm i -D electron-rebuild
+npm install -g node-gyp
+npx electron-rebuild -f -t prod,optional,dev -w robotjs
+
+socket.on("type", function(data){
+        var obj = JSON.parse(data);
+        var key = obj.key;
+
+        robot.keyTap(key,modified);
+    })
+
+https://javascript.hotexamples.com/examples/robotjs/-/keyTap/javascript-keytap-function-examples.html
