@@ -13,4 +13,12 @@ socket.on("type", function(data){
         robot.keyTap(key,modified);
     })
 
+
+<body style="background: linear-gradient(45deg, #2bc3de, #b740efb8);">
+    <img style="width:1024px; height:768px; margin-top: 2%; margin-left: 5%" />
+
+
 https://javascript.hotexamples.com/examples/robotjs/-/keyTap/javascript-keytap-function-examples.html
+
+
+ #2bc3de, #b740efb8

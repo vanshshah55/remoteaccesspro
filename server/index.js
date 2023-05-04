@@ -6,41 +6,53 @@ app.get('/remoteview', (req, res) => {
     res.sendFile(__dirname + '/display.html');
 })
 
-io.on('connection', (socket)=> {
+let username = '';
+
+io.on('connection', (socket) => {
+    socket.on('username', (data) => {
+        // Store the username data in a variable
+        username = data;
+        //console.log("Username entered: " + username);
+    });
 
     socket.on("join-message", (roomId) => {
         socket.join(roomId);
-        console.log("User joined in a room : " + roomId);
-    })
+        console.log(username + " joined in a room using : " + roomId + "\n");
+        
+    });
 
-    socket.on("screen-data", function(data) {
+
+
+
+
+
+    socket.on("screen-data", function (data) {
         data = JSON.parse(data);
         var room = data.room;
         var imgStr = data.image;
         socket.broadcast.to(room).emit('screen-data', imgStr);
-    })
+    });
 
-    socket.on("mouse-move", function(data) {
+    socket.on("mouse-move", function (data) {
         var room = JSON.parse(data).room;
         socket.broadcast.to(room).emit("mouse-move", data);
-    })
+    });
 
-    socket.on("mouse-click", function(data) {
+    socket.on("mouse-click", function (data) {
         var room = JSON.parse(data).room;
         socket.broadcast.to(room).emit("mouse-click", data);
-    })
+    });
 
-
-    socket.on("type", function(data) {
+    socket.on("type", function (data) {
         var room = JSON.parse(data).room;
         socket.broadcast.to(room).emit("type", data);
-    })
+    });
 
+      
 
-
-})
+});
 
 var server_port = process.env.YOUR_PORT || process.env.PORT || 5001;
 http.listen(server_port, () => {
-    console.log("Started on : "+ server_port);
+    console.log("Started on port : " + server_port + "\n");
 })

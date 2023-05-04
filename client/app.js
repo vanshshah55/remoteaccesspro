@@ -1,10 +1,42 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { v4: uuidv4 } = require('uuid');
 const screenshot = require('screenshot-desktop');
+
 var robot = require("robotjs");
 
-var xclient ='http://192.168.39.189:5001'
-var socket = require('socket.io-client')(xclient);
+
+const os = require('os');
+
+const interfaces = os.networkInterfaces();
+
+let ipAddress;
+
+for (const interfaceName in interfaces) {
+  const interface = interfaces[interfaceName];
+  for (const iface of interface) {
+    if (iface.family === 'IPv4' && !iface.internal) {
+      ipAddress = iface.address;
+      break;
+    }
+  }
+  if (ipAddress) {
+    break;
+  }
+}
+
+ // prints the IP address to the console
+
+
+
+var text5= (ipAddress);
+
+var text3="http://";
+var text4=":5001";
+var results=text3.concat(text5,text4) 
+//var xclient ='https://430b-2405-201-2c-d84d-c0e1-561b-66f0-a2ae.ngrok-free.app/remoteview'
+console.log("IP ADDRESS : "+ ipAddress)
+console.log("Enter this url on client browser : "+results+"/remoteview");
+var socket = require('socket.io-client')(results);
 var interval;
 
 function createWindow () {
@@ -31,9 +63,12 @@ function createWindow () {
     socket.on("mouse-click", function(data){
         robot.mouseClick();
     })
+
+    
+
     
     socket.on("type", function(data){
-        console.log(data)
+        //console.log(data)
         var obj = JSON.parse(data);
         var key = obj.key;
         if (data === key) robot.keyTap(key)
@@ -77,6 +112,6 @@ ipcMain.on("start-share", function(event, arg) {
 })
 
 ipcMain.on("stop-share", function(event, arg) {
-
+    
     clearInterval(interval);
 })

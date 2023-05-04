@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dns": "^0.2.2",
     "electron": "^23.2.1",
+    "os": "^0.1.2",
     "robotjs": "^0.6.0",
     "screenshot-desktop": "^0.0.0-development",
     "socket.io-client": "^4.6.1",
