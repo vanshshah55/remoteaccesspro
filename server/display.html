@@ -44,19 +44,43 @@
                     // Send the username to the server
                     socket.emit('username', username);
 
-                    var room = prompt("Please enter Room ID: ");
-                    if (room.trim().length == 0) {
-                        document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">incorrect ROOM ID</p></div>');
+
+
+
+
+                    const uuidRegex = /^([0-9a-fA-F]{2}-){2}[0-9a-fA-F]{2}$/;
+
+                    const room = prompt("Please enter Room ID: ");
+
+                    if (!room) {
+                        document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">No UUID entered</p></div>');
+                    } else if (room.trim().length == 0) {
+                        document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">Incorrect UUID</p></div>');
+                    } else if (!room.match(uuidRegex)) {
+                        document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">Invalid UUID format</p></div>');
+                    } else {
+                        // Do something with the valid UUID
                     }
-                    if (room != '1234') {
-                        //              document.write('<div style="background: linear-gradient(45deg, #2bc3de, #b740efb8); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px; border: 3px solid #fff;">Room ID is mandatory to join</p></div>');
-                        document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">incorrect ROOM ID</p></div>');
-                    }
+
+
+
+
+
+
+
+                    // var room = prompt("Please enter Room ID: ");
+                    // if (room.trim().length == 0) {
+                    //     document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">incorrect ROOM ID</p></div>');
+                    // }
+                    // if (room != ) {
+                    //     //              document.write('<div style="background: linear-gradient(45deg, #2bc3de, #b740efb8); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px; border: 3px solid #fff;">Room ID is mandatory to join</p></div>');
+                    //     document.write('<div style="background: linear-gradient(45deg, #FF0000, #000000); height: 100vh; display: flex; justify-content: center; align-items: center;"><p style="color: #fff; font-size: 3rem; text-align: center; font-family: Arial, sans-serif; letter-spacing: 2px; text-shadow: 1px 1px 1px #333; font-weight: bold; padding: 20px;border: 3px solid #fff;">incorrect ROOM ID</p></div>');
+                    // }
 
 
                     var result = text1.concat(hostname, text2)
                     var xserver = 'https://24e9-2405-201-2c-d84d-2d9a-387b-1346-c15e.ngrok-free.app'
-                    socket = io.connect(xserver);
+                    socket = io.connect(result);
 
                     socket.emit("join-message", room);
                     socket.on('screen-data', function (message) {

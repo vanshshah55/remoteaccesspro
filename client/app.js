@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { v4: uuidv4 } = require('uuid');
+
 const screenshot = require('screenshot-desktop');
 
 var robot = require("robotjs");
@@ -12,37 +13,38 @@ const interfaces = os.networkInterfaces();
 let ipAddress;
 
 for (const interfaceName in interfaces) {
-  const interface = interfaces[interfaceName];
-  for (const iface of interface) {
-    if (iface.family === 'IPv4' && !iface.internal) {
-      ipAddress = iface.address;
-      break;
+    const interface = interfaces[interfaceName];
+    for (const iface of interface) {
+        if (iface.family === 'IPv4' && !iface.internal) {
+            ipAddress = iface.address;
+            break;
+        }
     }
-  }
-  if (ipAddress) {
-    break;
-  }
+    if (ipAddress) {
+        break;
+    }
 }
 
- // prints the IP address to the console
+// prints the IP address to the console
 
 
 
-var text5= (ipAddress);
+var text5 = (ipAddress);
 
-var text3="http://";
-var text4=":5001";
-var results=text3.concat(text5,text4) 
+var text3 = "http://";
+var text4 = ":5001";
+var results = text3.concat(text5, text4)
 //var xclient ='https://430b-2405-201-2c-d84d-c0e1-561b-66f0-a2ae.ngrok-free.app/remoteview'
-console.log("IP ADDRESS : "+ ipAddress)
-console.log("Enter this url on client browser : "+results+"/remoteview");
+console.log("IP ADDRESS : " + ipAddress)
+//console.log("Enter this url on client browser : "+results+"/remoteview");
+console.log("Enter this url on client browser : http://remoteaccesspro:5001/remoteview")
 var socket = require('socket.io-client')(results);
 var interval;
 
-function createWindow () {
+function createWindow() {
     const win = new BrowserWindow({
         width: 500,
-        height: 150,
+        height: 185,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -52,7 +54,7 @@ function createWindow () {
     win.removeMenu();
     win.loadFile('index.html')
 
-    socket.on("mouse-move", function(data){
+    socket.on("mouse-move", function (data) {
         var obj = JSON.parse(data);
         var x = obj.x;
         var y = obj.y;
@@ -60,21 +62,21 @@ function createWindow () {
         robot.moveMouse(x, y);
     })
 
-    socket.on("mouse-click", function(data){
+    socket.on("mouse-click", function (data) {
         robot.mouseClick();
     })
 
-    
 
-    
-    socket.on("type", function(data){
+
+
+    socket.on("type", function (data) {
         //console.log(data)
         var obj = JSON.parse(data);
         var key = obj.key;
         if (data === key) robot.keyTap(key)
-        try {robot.keyTap(key)}
-        catch(err) {console.log(err)}
-    })  
+        try { robot.keyTap(key) }
+        catch (err) { console.log(err) }
+    })
 
 }
 
@@ -92,13 +94,19 @@ app.on('activate', () => {
     }
 })
 
-ipcMain.on("start-share", function(event, arg) {
+ipcMain.on("start-share", function (event, arg) {
 
-    var uuid = "1234" //uuidv4();
+    var uuid = uuidv4()
+        .replace(/-/g, '')
+        .slice(0, 16)
+        .replace(/(..)/g, '$1-')
+        .slice(0, 8)
+        .replace(/-$/, '');
+
     socket.emit("join-message", uuid);
     event.reply("uuid", uuid);
 
-    interval = setInterval(function() {
+    interval = setInterval(function () {
         screenshot().then((img) => {
             var imgStr = Buffer.from(img).toString('base64');
 
@@ -111,7 +119,7 @@ ipcMain.on("start-share", function(event, arg) {
     }, 100)
 })
 
-ipcMain.on("stop-share", function(event, arg) {
-    
+ipcMain.on("stop-share", function (event, arg) {
+
     clearInterval(interval);
 })

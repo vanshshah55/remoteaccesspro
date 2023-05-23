@@ -12,13 +12,16 @@ io.on('connection', (socket) => {
     socket.on('username', (data) => {
         // Store the username data in a variable
         username = data;
+        // const ip = socket.request.connection.address().address;
         //console.log("Username entered: " + username);
     });
+
+
 
     socket.on("join-message", (roomId) => {
         socket.join(roomId);
         console.log(username + " joined in a room using : " + roomId + "\n");
-        
+
     });
 
 
@@ -48,7 +51,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room).emit("type", data);
     });
 
-      
+
 
 });
 

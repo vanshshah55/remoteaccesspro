@@ -1,5 +1,5 @@
 {
-  "name": "codeboard-screencast-server",
+  "name": "screencast-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
